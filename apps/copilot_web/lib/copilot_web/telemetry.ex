@@ -1,4 +1,8 @@
 defmodule CopilotWeb.Telemetry do
+  @moduledoc """
+  Module for collection metrics about the application
+  """
+
   use Supervisor
   import Telemetry.Metrics
 
