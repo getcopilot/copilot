@@ -22,6 +22,8 @@ defmodule CopilotWeb.ConnCase do
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
+      import Copilot.Factory
+      import Copilot.TestHelpers
       import CopilotWeb.ConnCase
 
       alias CopilotWeb.Router.Helpers, as: Routes
@@ -34,5 +36,23 @@ defmodule CopilotWeb.ConnCase do
   setup tags do
     Copilot.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
+  end
+
+  @spec register_and_login_user!(%{conn: Plug.Conn.t()}) :: %{
+          conn: Plug.Conn.t(),
+          user: Copilot.Accounts.User.t()
+        }
+  def register_and_login_user!(%{conn: conn}) do
+    user = Copilot.Factory.insert(:user)
+    %{conn: login_user(conn, user), user: user}
+  end
+
+  @spec login_user(Plug.Conn.t(), Copilot.Accounts.User.t()) :: Plug.Conn.t()
+  def login_user(conn, user) do
+    {:ok, encoded_token} = Copilot.Accounts.create_user_session_token(user)
+
+    conn
+    |> Phoenix.ConnTest.init_test_session(%{})
+    |> Plug.Conn.put_session(:user_token, encoded_token)
   end
 end
