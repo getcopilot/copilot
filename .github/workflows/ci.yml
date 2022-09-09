@@ -1,0 +1,72 @@
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      MIX_ENV: test
+    services:
+      db:
+        image: postgres:11
+        ports: ['5432:5432']
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: '24'
+          elixir-version: '1.13.3'
+      - run: mix deps.get
+      - run: mix setup
+      - run: mix test
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: '24'
+          elixir-version: '1.13.4'
+      - run: mix deps.get
+      - run: mix credo --strict
+
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: '24'
+          elixir-version: '1.13.4'
+      - run: mix deps.get
+      - run: mix format --check-formatted
+
+  dialyxer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: '24'
+          elixir-version: '1.13.4'
+      - run: mix deps.get
+      - run: mix credo --strict
+      - name: Check PLT cache
+        uses: actions/cache@v1
+        id: plt-cache
+        with:
+          path: priv/plts
+          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-plts-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+      - name: Generate PLTs
+        if: steps.plt-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p priv/plts
+          mix dialyzer --plt
+      - run: mix dialyzer --no-check --halt-exit-status --format github
