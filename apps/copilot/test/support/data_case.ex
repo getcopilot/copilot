@@ -26,6 +26,8 @@ defmodule Copilot.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import Copilot.DataCase
+      import Copilot.Factory
+      import Copilot.TestHelpers
     end
   end
 

@@ -1,0 +1,7 @@
+<.form let={f} for={@conn} action={Routes.sessions_path(@conn, :create)} as={:user}>
+  <%= if @error_message do %>
+    <%= @error_message %>
+  <% end %>
+
+  <%= label f, :email %>
+</.form>
