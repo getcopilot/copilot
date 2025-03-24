@@ -33,3 +33,6 @@ erl_crash.dump
 
 # Elixir language server
 /.elixir_ls/
+
+# Nix
+result

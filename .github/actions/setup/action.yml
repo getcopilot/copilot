@@ -9,10 +9,10 @@ runs:
           system-features = big-parallel
           accept-flake-config = true
     - name: Use Cachix store
-        uses: cachix/cachix-action@v15
-        with:
-          name: copilot
-          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
-          extraPullNames: copilot,nix-community
+      uses: cachix/cachix-action@v15
+      with:
+        name: copilot
+        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        extraPullNames: copilot,nix-community
     - run: nix develop --impure --command just install
       shell: bash
