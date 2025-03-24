@@ -9,6 +9,8 @@ inputs:
 runs:
   using: composite
   steps:
+    - run: mkdir $HOME/.nix-defexpr/channels
+      shell: bash
     - uses: DeterminateSystems/nix-installer-action@main
       with:
         extra-conf: |
