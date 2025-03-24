@@ -43,7 +43,8 @@ defmodule CopilotWeb do
         layouts: [html: CopilotWeb.Layouts]
 
       import Plug.Conn
-      import CopilotWeb.Gettext
+
+      use Gettext, backend: CopilotWeb.Gettext
 
       unquote(verified_routes())
     end
@@ -85,7 +86,8 @@ defmodule CopilotWeb do
       import Phoenix.HTML
       # Core UI components and translation
       import CopilotWeb.CoreComponents
-      import CopilotWeb.Gettext
+
+      use Gettext, backend: CopilotWeb.Gettext
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS

@@ -3,6 +3,7 @@ default:
 
 install:
     mix deps.get
+    pnpm install --prefix apps/copilot_web/assets
 
 setup:
     mix setup
@@ -36,3 +37,6 @@ debug-test *args:
 
 seed:
     mix run apps/copilot/priv/repo/seeds.exs
+
+pnpm *args:
+    pnpm {{ args }} --prefix apps/copilot_web/assets

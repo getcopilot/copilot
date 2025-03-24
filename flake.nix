@@ -76,6 +76,7 @@
             yamllint = {
               command = lib.getExe pkgs.yamllint;
               includes = [ "*.yaml" "*.yml" ];
+              excludes = [ "apps/copilot_web/assets/pnpm-lock.yaml" ];
             };
           };
         };

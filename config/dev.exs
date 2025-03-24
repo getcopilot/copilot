@@ -25,7 +25,8 @@ config :copilot_web, CopilotWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "UG1w8eNYrazNjXalIWJ9H1dt2bwwMRmcr4iSyajsnwMUMFGYMBnNT1lkH6hSlmhi",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:copilot_web, ~w(--sourcemap=inline --watch)]},
+    # esbuild: {Esbuild, :install_and_run, [:copilot_web, ~w(--sourcemap=inline --watch)]},
+    node: ["build.js", "--watch", cd: Path.expand("../apps/copilot_web/assets", __DIR__)],
     tailwind: {Tailwind, :install_and_run, [:copilot_web, ~w(--watch)]}
   ]
 
