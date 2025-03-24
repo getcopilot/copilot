@@ -33,7 +33,7 @@
       perSystem = { config, pkgs, lib, ... }: {
         devShells.default = pkgs.mkShell {
           nativeBuildInputs = with pkgs;
-            [ cachix elixir just ] ++ [ config.treefmt.build.wrapper ]
+            [ cachix elixir just yamllint ] ++ [ config.treefmt.build.wrapper ]
             ++ (builtins.attrValues config.treefmt.build.programs)
             ++ lib.optionals stdenv.isLinux [ inotify-tools ]
             ++ lib.optionals stdenv.isDarwin
@@ -72,6 +72,10 @@
               command = lib.getExe pkgs.just;
               options = [ "--unstable" "--fmt" "--justfile" ];
               includes = [ "Justfile" ];
+            };
+            yamllint = {
+              command = lib.getExe pkgs.yamllint;
+              includes = [ "*.yaml" "*.yml" ];
             };
           };
         };

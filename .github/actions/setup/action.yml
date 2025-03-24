@@ -1,5 +1,11 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+---
 name: Setup
 description: Sets up the workflow
+inputs:
+  cachix_auth_token:
+    description: Auth token for reading and writing to Cachix
+    required: true
 runs:
   using: composite
   steps:
@@ -12,7 +18,7 @@ runs:
       uses: cachix/cachix-action@v15
       with:
         name: copilot
-        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        authToken: ${{ inputs.cachix_auth_token }}
         extraPullNames: copilot,nix-community
     - run: nix develop --impure --command just install
       shell: bash

@@ -1,5 +1,7 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+---
 name: CI
-on:
+"on":
   push:
 
 jobs:
@@ -9,6 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          cachix_auth_token: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - run: nix develop --impure --command just format --fail-on-change --no-cache
       - run: nix develop --impure --command just lint
 
@@ -27,6 +31,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          cachix_auth_token: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - run: nix develop --impure --command just setup
       - run: nix develop --impure --command just test
 
@@ -36,10 +42,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          cachix_auth_token: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - id: plt-cache
         uses: actions/cache@v4
         with:
-          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-plts-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          key: >
+            ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-plts-
+            ${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
           path: priv/plts
       - if: steps.plt-cache.outputs.cache-hit != 'true'
         run: |
