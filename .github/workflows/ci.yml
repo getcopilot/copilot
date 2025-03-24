@@ -1,0 +1,48 @@
+name: CI
+on:
+  push:
+
+jobs:
+  style:
+    name: Run linters and formatters
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: nix develop --impure --command just format --fail-on-change --no-cache
+      - run: nix develop --impure --command just lint
+
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    env:
+      MIX_ENV: test
+    services:
+      db:
+        env:
+          POSTGRES_PASSWORD: postgres
+        image: postgis/postgis:15-master
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: nix develop --impure --command just setup
+      - run: nix develop --impure --command just test
+
+  dialyzer:
+    name: Run dialyzer
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - id: plt-cache
+        uses: actions/cache@v4
+        with:
+          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-plts-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          path: priv/plts
+      - if: steps.plt-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p priv/plts
+          nix develop --impure --command mix dialyzer --plt
+      - run: nix develop --impure --command mix dialyzer --format github
