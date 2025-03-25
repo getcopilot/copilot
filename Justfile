@@ -36,3 +36,6 @@ debug-test *args:
 
 seed:
     mix run apps/copilot/priv/repo/seeds.exs
+
+pnpm *args:
+    pnpm {{ args }} --prefix apps/copilot_web/assets

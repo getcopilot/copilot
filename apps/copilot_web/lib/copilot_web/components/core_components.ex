@@ -16,7 +16,7 @@ defmodule CopilotWeb.CoreComponents do
   """
   use Phoenix.Component
 
-  import CopilotWeb.Gettext
+  use Gettext, backend: CopilotWeb.Gettext
 
   alias Phoenix.HTML.Form, as: HTMLForm
   alias Phoenix.LiveView.JS

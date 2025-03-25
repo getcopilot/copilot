@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "target": "es2017"
+  }
+}

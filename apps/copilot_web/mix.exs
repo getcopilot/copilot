@@ -43,7 +43,7 @@ defmodule CopilotWeb.MixProject do
       {:phoenix_live_view, "~> 0.20.2"},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.8.3"},
-      {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
+      {:live_svelte, "~> 0.15.0"},
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
       {:heroicons,
        github: "tailwindlabs/heroicons",
@@ -68,11 +68,10 @@ defmodule CopilotWeb.MixProject do
     [
       setup: ["deps.get", "assets.setup", "assets.build"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["tailwind copilot_web", "esbuild copilot_web"],
+      "assets.setup": ["tailwind.install --if-missing"],
+      "assets.build": ["tailwind copilot_web"],
       "assets.deploy": [
         "tailwind copilot_web --minify",
-        "esbuild copilot_web --minify",
         "phx.digest"
       ]
     ]

@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+---
+name: Setup
+description: Sets up the workflow
+inputs:
+  cachix_auth_token:
+    description: Auth token for reading and writing to Cachix
+    required: true
+runs:
+  using: composite
+  steps:
+    - run: mkdir -p $HOME/.nix-defexpr/channels
+      shell: bash
+    - uses: DeterminateSystems/nix-installer-action@main
+      with:
+        extra-conf: |
+          system-features = big-parallel
+          accept-flake-config = true
+    - name: Use Cachix store
+      uses: cachix/cachix-action@v15
+      with:
+        name: copilot
+        authToken: ${{ inputs.cachix_auth_token }}
+        extraPullNames: copilot,nix-community
+    - run: nix develop --impure --command bash -c "just install"
+      shell: bash
+    - run: nix develop --impure --command bash -c "just pnpm install --frozen-lockfile"
+      shell: bash

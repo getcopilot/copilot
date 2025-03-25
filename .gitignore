@@ -30,3 +30,9 @@ erl_crash.dump
 
 # PLTs
 /priv/plts/
+
+# Elixir language server
+/.elixir_ls/
+
+# Nix
+result
