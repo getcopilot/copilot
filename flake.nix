@@ -33,7 +33,8 @@
       perSystem = { config, pkgs, lib, ... }: {
         devShells.default = pkgs.mkShell {
           nativeBuildInputs = with pkgs;
-            [ cachix elixir just yamllint ] ++ [ config.treefmt.build.wrapper ]
+            [ cachix elixir just yamllint nodejs_22 nodePackages_latest.pnpm ]
+            ++ [ config.treefmt.build.wrapper ]
             ++ (builtins.attrValues config.treefmt.build.programs)
             ++ lib.optionals stdenv.isLinux [ inotify-tools ]
             ++ lib.optionals stdenv.isDarwin
