@@ -22,5 +22,5 @@ runs:
         name: copilot
         authToken: ${{ inputs.cachix_auth_token }}
         extraPullNames: copilot,nix-community
-    - run: nix develop --impure --command just install
+    - run: nix develop --impure --command bash -c "just pnpm install --frozen-lockfile"
       shell: bash

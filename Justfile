@@ -3,7 +3,6 @@ default:
 
 install:
     mix deps.get
-    pnpm install --prefix apps/copilot_web/assets
 
 setup:
     mix setup
